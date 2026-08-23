@@ -8,4 +8,5 @@ dependencies = [
     "fastapi>=0.116.1",
     "mcp[cli]>=1.13.1",
     "starlette>=0.37.0",
+    "uvicorn>=0.30.0",
 ]
