@@ -40,7 +40,8 @@ async def lifespan(app: FastAPI):
 
 
 app = FastAPI(lifespan=lifespan)
-app.mount("/", mcp.streamable_http_app())
+# Mount MCP server at /mcp path
+app.mount("/mcp", mcp.streamable_http_app())
 
 
 if __name__ == "__main__":
