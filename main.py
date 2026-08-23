@@ -2,9 +2,17 @@ from mcp.server.fastmcp import FastMCP
 import os
 
 PORT = os.environ.get("PORT", 10000)
+API_KEY = os.environ.get("API_KEY", "default-key-change-me")
 
 # Create an MCP server
 mcp = FastMCP("web-search", host="0.0.0.0", port=PORT)
+
+# Middleware to check API key
+@mcp.server.middleware("before_request")
+def check_api_key(request):
+    auth_header = request.headers.get("Authorization", "")
+    if not auth_header.startswith(f"Bearer {API_KEY}"):
+        raise ValueError("Invalid or missing API key")
 
 
 
