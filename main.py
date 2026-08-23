@@ -1,19 +1,12 @@
 import contextlib
-from fastapi import FastAPI, Header
+from fastapi import FastAPI
 from mcp.server.fastmcp import FastMCP
 import os
 
 PORT = os.environ.get("PORT", 10000)
-API_KEY = os.environ.get("API_KEY", "default-key-change-me")
 
 # Create an MCP server with stateless HTTP
 mcp = FastMCP(name="web-search", stateless_http=True)
-
-
-# API Key validation decorator
-def require_api_key(authorization: str = Header(None)):
-    if not authorization or not authorization.startswith(f"Bearer {API_KEY}"):
-        raise ValueError("Invalid or missing API key")
 
 
 @mcp.tool()
