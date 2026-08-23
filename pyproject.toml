@@ -5,7 +5,5 @@ description = "MCP HTTP Server"
 readme = "README.md"
 requires-python = ">=3.13"
 dependencies = [
-    "fastapi>=0.116.1",
-    "fastmcp>=0.5.0",
-    "uvicorn>=0.30.0",
+    "fastmcp>=3.4.7",
 ]

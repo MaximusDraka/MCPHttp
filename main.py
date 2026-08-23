@@ -1,6 +1,5 @@
 import os
 from fastmcp import FastMCP
-import uvicorn
 
 PORT = int(os.environ.get("PORT", 8000))
 
@@ -8,7 +7,7 @@ PORT = int(os.environ.get("PORT", 8000))
 mcp = FastMCP(name="web-search")
 
 
-@mcp.tool()
+@mcp.tool
 def add(a: int, b: int) -> int:
     """Add two numbers together"""
     return a + b
@@ -20,7 +19,7 @@ def get_greeting(name: str) -> str:
     return f"Hello, {name}!"
 
 
-@mcp.prompt()
+@mcp.prompt
 def greet_user(name: str, style: str = "friendly") -> str:
     """Generate a greeting prompt"""
     styles = {
@@ -31,21 +30,5 @@ def greet_user(name: str, style: str = "friendly") -> str:
     return f"{styles.get(style, styles['friendly'])} for someone named {name}."
 
 
-# Get the FastAPI app from MCP
-app = mcp.app
-
-
-@app.get("/health")
-async def health():
-    """Health check endpoint"""
-    return {"status": "healthy"}
-
-
 if __name__ == "__main__":
-    uvicorn.run(
-        "main:app",
-        host="0.0.0.0",
-        port=PORT,
-        log_level="info",
-        reload=False
-    )
+    mcp.run(transport="http", host="0.0.0.0", port=PORT)
