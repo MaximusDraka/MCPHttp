@@ -1,11 +1,11 @@
 import os
-from mcp.server.fastmcp import FastMCP
+from fastmcp import FastMCP
 import uvicorn
 
 PORT = int(os.environ.get("PORT", 8000))
 
 # Create MCP server
-mcp = FastMCP(name="web-search", stateless_http=True)
+mcp = FastMCP(name="web-search")
 
 
 @mcp.tool()
