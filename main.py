@@ -1,17 +1,17 @@
-import contextlib
-from fastapi import FastAPI
-from mcp.server.fastmcp import FastMCP
+import asyncio
 import os
+from mcp.server.fastmcp import FastMCP
+import uvicorn
 
-PORT = os.environ.get("PORT", 10000)
+PORT = int(os.environ.get("PORT", 8000))
 
-# Create an MCP server with stateless HTTP
+# Create MCP server
 mcp = FastMCP(name="web-search", stateless_http=True)
 
 
 @mcp.tool()
 def add(a: int, b: int) -> int:
-    """Add two numbers"""
+    """Add two numbers together"""
     return a + b
 
 
@@ -32,18 +32,21 @@ def greet_user(name: str, style: str = "friendly") -> str:
     return f"{styles.get(style, styles['friendly'])} for someone named {name}."
 
 
-# Create FastAPI app with proper lifespan
-@contextlib.asynccontextmanager
-async def lifespan(app: FastAPI):
-    async with mcp.session_manager.run():
-        yield
+# Get the FastAPI app from MCP
+app = mcp.app
 
 
-app = FastAPI(lifespan=lifespan)
-# Mount MCP server at /mcp path
-app.mount("/mcp", mcp.streamable_http_app())
+@app.get("/health")
+async def health():
+    """Health check endpoint"""
+    return {"status": "healthy"}
 
 
 if __name__ == "__main__":
-    import uvicorn
-    uvicorn.run(app, host="0.0.0.0", port=PORT)
+    uvicorn.run(
+        "main:app",
+        host="0.0.0.0",
+        port=PORT,
+        log_level="info",
+        reload=False
+    )
